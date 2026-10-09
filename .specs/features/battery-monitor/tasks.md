@@ -35,9 +35,9 @@ Estados: `[ ]` pendente · `[-]` em andamento · `[x]` concluída · `[!]` bloqu
 - **Detecção de sensor ausente:** com o pino flutuante o firmware reporta
   ~0,28 V como se fosse medida. Isso é limitação do escopo (o memorial não pede
   essa detecção), registrada como R-6.
-- Nenhum commit: o diretório **não é um repositório git** e commits não são
-  automáticos (`AGENTS.md` §8). Os gates de `git status`/`git diff` foram
-  substituídos por inventário de arquivos (`HANDOFF.md`).
+- Nenhum commit: commits não são automáticos (`AGENTS.md` §8). O gate de
+  change-control (`git status` / `git diff`) foi reexecutado após a inicialização
+  do repositório e confirmou o escopo das alterações.
 
 ## Evidência HIL executada (2026-10-09)
 

@@ -35,12 +35,17 @@ Criados:
 | `.specs/features/battery-monitor/design.md` | ADR-001..004 + interface do ADC |
 | `.specs/features/battery-monitor/tasks.md` | T-001..T-013 |
 | `docs/05-testing/evidence-battery-monitor.md` | evidências HOST/build/HIL |
-| `README.md` | porta de entrada: hardware, comandos, verificação, limitações |
+| `README.md` | porta de entrada (skill `create-readme`): badges, hardware, comandos, verificação, limitações |
+| `LICENSE` | texto integral da MIT License — Copyright (c) 2026 William |
 | `STATUS.md` | estado atual |
 | `HANDOFF.md` | este documento |
 
-**Não alterados:** `AGENTS.md`, `docs/memorial.txt`, `AVALIACAO.md`,
-`README-AGENTIC.md`, `.github/**`, `.agents/**`, `.vscode/**`, `.gitignore`.
+**Alterados parcialmente:** `AGENTS.md` — **somente o §9 (licença)**, de Apache 2.0
+para MIT. Os §§2–7 continuam descrevendo o projeto térmico ESP8266 e seguem
+pendentes de decisão (`SPEC_DEVIATION-001`).
+
+**Não alterados:** `docs/memorial.txt`, `AVALIACAO.md`, `README-AGENTIC.md`,
+`.github/**`, `.agents/**`, `.vscode/**`, `.gitignore`.
 
 ## Decisões
 
@@ -50,6 +55,7 @@ Criados:
 | ADR-002 | Converter via `analogReadMilliVolts` (calibração eFuse) em vez de assumir `Vref` — confirmado: o chip reporta *VRef calibration in efuse* |
 | ADR-003 | Média móvel de 8 amostras a 4 Hz para atender NFR-002 (não é desvio: o fator 2,0 e o formato permanecem exatos) |
 | ADR-004 | Saída serial contém **apenas** a mensagem contratada (sem banner), para parsing automatizado |
+| — | **Licença MIT** (decisão do responsável, 2026-10-09), substituindo o Apache 2.0 do `AGENTS.md` §9; declarada no README por badge + rodapé, conforme a skill `create-readme` |
 | — | Baud 115200, amostragem 250 ms, relatório 1000 ms: escolhas registradas (P-2/P-3), não fixadas no memorial |
 
 ## Problemas
@@ -59,9 +65,10 @@ Criados:
    **não** alterar `AGENTS.md` (decisão conservadora). Requer decisão do
    responsável: (a) atualizar `AGENTS.md` para o alvo ESP32, ou (b) separar as
    regras dos dois produtos.
-2. **Workspace não é repositório git:** os gates de `git status`/`git diff`
-   (instructions 00 e 03) não puderam rodar. Substituídos por inventário de
-   arquivos. Nenhum commit feito.
+2. **Alterações não commitadas:** o repositório git existe (commit `460f004`) e o
+   gate `git status`/`git diff` foi reexecutado — escopo confirmado (4 arquivos
+   modificados + `LICENSE` novo). O commit fica a critério do responsável
+   (`AGENTS.md` §8: sem commit automático).
 3. **`pio` do `PATH` quebrado** (pipx venv com symlink inválido). Use
    `PYTHONPATH=... python3 -m platformio`.
 

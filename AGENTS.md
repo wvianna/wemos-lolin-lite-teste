@@ -81,4 +81,4 @@ Porta serial: `/dev/ttyUSB0` (115200 baud). Conectar ao AP do ESP para testes HT
 
 ## 9. Licença
 
-Apache License 2.0 — Copyright 2026 William. Detalhes no `README.md`.
+MIT License — Copyright (c) 2026 William. Texto integral em `LICENSE`; detalhes no `README.md`.

@@ -3,7 +3,8 @@
 - **Data:** 2026-10-09
 - **Recurso:** `.specs/features/battery-monitor/`
 - **Última alteração relevante:** implementação completa + gravação e teste HIL
-  no ESP32 físico (`/dev/ttyUSB0`).
+  no ESP32 físico (`/dev/ttyUSB0`) e README reescrito com a skill `create-readme`
+  (licença MIT).
 
 ## Concluído
 
@@ -23,6 +24,14 @@
 - Verificador HIL reprodutível: `firmware/scripts/hil_serial_check.py`.
 - Artefatos SDD: `constitution.md`, `spec.md` (FR/NFR/CA + rastreabilidade),
   `design.md` (ADR-001..004), `tasks.md`, evidências em `docs/05-testing/`.
+- `README.md` reescrito conforme a skill `create-readme` (header com badges,
+  admonitions GFM, tom conciso, sem seção de licença).
+- **Licença do projeto definida como MIT** (decisão do responsável, 2026-10-09):
+  criado `LICENSE`; `AGENTS.md` §9 sincronizado de Apache 2.0 para MIT.
+- A licença é declarada no `README.md` por **badge + rodapé** (não por uma seção
+  dedicada), conforme a skill `create-readme`, que reserva licença/contribuição
+  para arquivos próprios. Isso é a "decisão registrada em contrário" prevista em
+  `.github/skills/sdd-embarcado/SKILL.md` §8.
 
 ## Em andamento
 
@@ -47,10 +56,11 @@
 - **`pio` do `PATH` não executa** neste host (venv pipx com *symlink* quebrado
   para `/usr/bin/python3`). Contorno documentado no `README.md`
   (`PYTHONPATH` + `python3 -m platformio`).
-- **O diretório não é um repositório git**, então os gates de change-control
-  (`git status` / `git diff`) das instructions 00/03 **não puderam ser
-  executados**. Substituídos por inventário de arquivos antes/depois. Nenhum
-  commit foi feito (`AGENTS.md` §8).
+- **Alterações desta sessão não commitadas.** O repositório git existe (commit
+  `460f004`); o working tree tem 4 arquivos modificados (`AGENTS.md`, `README.md`,
+  `STATUS.md`, `HANDOFF.md`) e `LICENSE` não rastreado. O gate de change-control
+  (`git status` / `git diff --stat`) foi reexecutado e confirma o escopo: do
+  `AGENTS.md` só o §9 mudou. Nenhum commit foi feito pelo agente (`AGENTS.md` §8).
 
 ## Testes realizados
 
