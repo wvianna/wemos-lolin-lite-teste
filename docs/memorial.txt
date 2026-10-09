@@ -1,0 +1,87 @@
+Especificação Técnica: Sistema de Monitoramento de Tensão de Bateria no Hardware Lolin Light
+
+1. Visão Geral e Objetivos do Sistema
+
+A especificação rigorosa de requisitos de hardware e firmware desempenha um papel estratégico e fundamental na engenharia de sistemas embarcados moderna. Em fluxos de desenvolvimento orientados à automação, nos quais modelos de linguagem e agentes de Inteligência Artificial (IA) são incumbidos da síntese autônoma de código, a eliminação completa de ambiguidades nas definições físicas e lógicas representa o fator determinante para o sucesso do build e da execução. Este documento estabelece a fonte absoluta de verdade (ground truth) e os parâmetros exatos necessários para balizar a geração agêntica de código, assegurando a perfeita integração entre o circuito condicionador de sinal e o microcontrolador sob a plataforma Lolin Light.
+
+1.1 Contexto e Propósito do Documento
+
+Este documento técnico serve como especificação prescritiva para orientar a geração automatizada de firmware. O propósito primário do sistema é realizar a medição precisa da tensão de uma bateria de lítio por meio de amostragem analógica e exibir continuamente esses dados em um terminal serial. Essa abordagem fornece a infraestrutura necessária para a execução imediata de testes de bancada, validação de hardware e avaliação funcional do algoritmo sintetizado.
+
+1.2 Escopo do Projeto
+
+O escopo deste projeto é estritamente delimitado aos elementos operacionais essenciais descritos nas diretrizes de origem:
+
+* Leitura Analógica: Amostragem contínua do sinal de tensão por meio do pino analógico dedicado na placa de desenvolvimento Lolin Light.
+* Divisão de Tensão: Atenuação passiva do sinal através de uma rede resistiva simétrica composta por dois resistores de 47\text{ k}\Omega.
+* Saída via Monitor Serial: Formatualização e transmissão dos dados calculados de tensão para a interface de monitor serial, visando testes e avaliação técnica.
+* Funcionalidades Fora do Escopo: Quaisquer recursos não explicitados na fonte — tais como rotinas de sleep de baixo consumo, protocolos de comunicação sem fio (Wi-Fi/Bluetooth), armazenamento em memória não volátil ou lógicas complexas de gerenciamento de carga — estão expressamente excluídos da especificação inicial.
+
+A correta delimitação do escopo e dos objetivos do sistema estabelece a base necessária para o detalhamento da infraestrutura física e da arquitetura de hardware apresentadas na seção seguinte.
+
+2. Arquitetura de Hardware e Circuito Elétrico
+
+A topologia do hardware em sistemas embarcados exige o adequado condicionamento de sinal elétrico antes de sua conversão para o domínio digital. Como a tensão nominal e de pico de uma bateria de lítio pode ultrapassar os limites elétricos suportados pelas portas de entrada analógica do microcontrolador, a implementação de uma rede atenuadora passiva é indispensável para proteger os pinos do circuito integrado e garantir que a conversão analógico-digital operará dentro da faixa de escala completa segura do componente.
+
+2.1 Mapeamento da Placa Lolin Light e Pinos
+
+O sistema operará estritamente na plataforma de desenvolvimento no modo Lolin Light. Para a aquisição do sinal proveniente do circuito condicionador da bateria, foi atribuído o pino de entrada analógica GPIO 35.
+
+Nota de Alias e Nomenclatura para Cabeçalhos: A referência a este pino na documentação e nas definições de periféricos da placa abrange as variantes de nomenclatura AO35 (Analog Output/Input 35) e GPO 35. O agente gerador de código deve reconhecer esses identificadores como aliases do pino físico GPIO 35 para a correta vinculação dos registradores ou bibliotecas de abstração de hardware (HAL).
+
+2.2 Configuração do Divisor de Tensão
+
+A atenuação da tensão da bateria é executada por um divisor de tensão passivo centralizado entre a fonte de alimentação e o pino de leitura do microcontrolador.
+
+Parâmetro / Componente	Especificação / Valor
+Fonte de Alimentação / Medição	Bateria de Lítio
+Resistor R1 (Superior)	47\text{ k}\Omega
+Resistor R2 (Inferior)	47\text{ k}\Omega
+Ponto de Saída (Tap Central)	Nó intermediário entre R1 e R2, conectado diretamente ao GPIO 35 (AO35 / GPO 35)
+
+A função primária do divisor de tensão composto por dois resistores idênticos de 47\text{ k}\Omega é atenuar a tensão de terminal da bateria de lítio por um fator exato de 0,5 (razão de divisão de 1:2). Esse rebaixamento reduz a escala de tensão incidente pela metade, ajustando a amplitude do sinal de entrada aos limites seguros de operação do Conversor Analógico-Digital (ADC) do Lolin Light e prevenindo sobretensões no pino de entrada.
+
+A topologia física do circuito condicionador e o fator de atenuação especificados determinam de forma inequívoca a lógica do algoritmo de firmware que deve ser sintetizado.
+
+3. Requisitos de Firmware e Lógica de Processamento
+
+A estruturação formal e minuciosa dos requisitos funcionais e não-funcionais é fundamental para orientar diretamente os modelos de linguagem e agentes geradores de código. A eliminação de ambiguidades na descrição matemática e no fluxo de execução garante que o firmware gerado seja funcionalmente correto desde a primeira compilação.
+
+3.1 Requisitos Funcionais (RF)
+
+1. Inicialização e Amostragem Analógica: O firmware deve configurar o pino GPIO 35 (AO35 / GPO 35) como entrada analógica de alta impedância, utilizando as configurações nativas de conversão analógico-digital (ADC) da plataforma Lolin Light, e realizar amostragens do valor digital bruto (raw ADC value).
+2. Cálculo e Recomposição da Tensão: O firmware deve converter o valor bruto obtido do ADC para o valor equivalente em Volts e aplicar a operação matemática inversa da rede atenuadora. Dado que o divisor de tensão com dois resistores de 47\text{ k}\Omega reduz a tensão de entrada pela metade (fator 0,5), o algoritmo deve multiplicar o valor de tensão lido na porta analógica pelo fator de escala multiplicativo fixo igual a 2,0 (V_{\text{bateria}} = V_{\text{ADC}} \times 2,0), recompondo com precisão a real tensão da bateria de lítio.
+3. Transmissão Serial: O firmware deve inicializar a interface de comunicação serial assíncrona (UART/Terminal Serial) e enviar periodicamente o valor calculado da tensão da bateria formatado para visualização em tempo real.
+
+3.2 Requisitos Não-Funcionais (RNF)
+
+* Clareza e Modularidade do Código Gerado: O código sintetizado pelos agentes de IA deve priorizar uma estrutura limpa, legível e determinística, evitando abstrações complexas não solicitadas ou dependências externas desnecessárias.
+* Estabilidade da Leitura: O processamento matemático e a amostragem analógica devem assegurar a estabilidade das medições exibidas, minimizando flutuações e garantindo dados coerentes no terminal serial.
+* Prontidão para Testes e Avaliação: A rotina de execução principal deve iniciar automaticamente após o procedimento de power-on reset (POR) do hardware Lolin Light, permitindo a imediata avaliação técnica sem necessidade de intervenção externa.
+
+A especificação das rotinas de processamento do firmware estabelece a necessidade direta de padronizar a carga útil (payload) transmitida pela interface de comunicação serial, conforme detalhado na próxima seção.
+
+4. Interface de Comunicação Serial e Diretrizes para Desenvolvimento Agêntico
+
+A interface de comunicação serial constitui o canal primário de verificação e depuração no ciclo de testes de hardware embarcado. A padronização estrita da saída de texto garante que ferramentas automatizadas de validação ou avaliadores humanos possam interpretar os resultados fornecidos pelo firmware de forma imediata e sem erros de parsing.
+
+4.1 Padronização da Saída no Terminal Serial
+
+A transmissão de dados no monitor serial deve adotar uma estrutura textual uniforme. O valor calculado da tensão deve ser formatado como um número de ponto flutuante com exatas duas casas decimais, acompanhado do rótulo descritivo e do símbolo da unidade de medida (Volts).
+
+O firmware deve emitir no terminal a seguinte especificação de caractere de tempo de execução (runtime format specifier):
+
+Tensão da Bateria: X.XX V
+
+Especificação técnica de formatação: Onde X.XX representa a variável de ponto flutuante da tensão calculada da bateria de lítio (com precisão fixada em duas casas decimais), seguida de um espaço simples e da letra maiúscula V.
+
+4.2 Critérios de Aceite para Validação da Ingestão Agêntica
+
+Para que o código de firmware gerado autonomamente por agentes de IA seja considerado validado e aprovado para execução no Lolin Light, ele deve cumprir rigorosamente o checklist abaixo:
+
+* [ ] Mapeamento do Pino de Entrada: Configuração correta do pino GPIO 35 (reconhecido sob os aliases AO35 / GPO 35) como entrada analógica (ADC).
+* [ ] Exatidão do Algoritmo de Conversão: Aplicação do fator multiplicativo de reconstrução de escala igual a 2,0 no cálculo de tensão, derivado da razão de atenuação do divisor com dois resistores de 47\text{ k}\Omega.
+* [ ] Formatação de Saída Serial: Inicialização da interface serial e envio contínuo/amostrado da mensagem em conformidade exata com o especificador Tensão da Bateria: X.XX V.
+* [ ] Aprovação em Teste Operacional: Execução estável do programa imediatamente após o boot do Lolin Light, fornecendo medições coerentes e prontas para avaliação técnica da bateria de lítio.
+
+Este documento estabelece os limites estritos, suficientes e necessários para orientar a automação e geração de código sem qualquer ambiguidade técnica.
